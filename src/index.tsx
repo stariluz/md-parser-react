@@ -29,9 +29,6 @@ const rules: MarkdownRule[] = [
     // Enlaces
     [/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color:#2A5DB0;text-decoration: none;">$1</a>'],
 
-    // Resaltados
-    [/(`)(\s?[^\n,]+\s?)(`)/g, '<code style="background-color:grey;color:black;text-decoration: none;border-radius: 3px;padding:0 2px;">$2</code>'],
-
     // Listas
     [/^\+\s(.+)/gm, "<ul><li>$1</li></ul>"],
     [/^\*\s(.+)/gm, "<ul><li>$1</li></ul>"],
