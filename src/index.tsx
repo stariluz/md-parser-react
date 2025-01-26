@@ -19,39 +19,39 @@ class HTMLTags {
     img?: string = '';
 }
 // Define el tipo para una regla de Markdown
-type MarkdownRule = [RegExp, (classnames: HTMLTags) => string];
+type MarkdownRule = [RegExp, (match: RegExpExecArray, classnames: HTMLTags) => string];
 
 // Reglas para el parser Markdown
 const rules: MarkdownRule[] = [
     // Encabezados
-    [/#{6}\s?([^\n]+)/g, (classnames) => `<h6 class="${classnames.h6 || ''}">$1</h6>`],
-    [/#{5}\s?([^\n]+)/g, (classnames) => `<h5 class="${classnames.h5 || ''}">$1</h5>`],
-    [/#{4}\s?([^\n]+)/g, (classnames) => `<h4 class="${classnames.h4 || ''}">$1</h4>`],
-    [/#{3}\s?([^\n]+)/g, (classnames) => `<h3 class="${classnames.h3 || ''}">$1</h3>`],
-    [/#{2}\s?([^\n]+)/g, (classnames) => `<h2 class="${classnames.h2 || ''}">$1</h2>`],
-    [/#{1}\s?([^\n]+)/g, (classnames) => `<h1 class="${classnames.h1 || ''}">$1</h1>`],
+    [/#{6}\s?([^\n]+)/g, (match, classnames) => `<h6 class="${classnames.h6 || ''}">${match[1]}</h6>`],
+    [/#{5}\s?([^\n]+)/g, (match, classnames) => `<h5 class="${classnames.h5 || ''}">${match[1]}</h5>`],
+    [/#{4}\s?([^\n]+)/g, (match, classnames) => `<h4 class="${classnames.h4 || ''}">${match[1]}</h4>`],
+    [/#{3}\s?([^\n]+)/g, (match, classnames) => `<h3 class="${classnames.h3 || ''}">${match[1]}</h3>`],
+    [/#{2}\s?([^\n]+)/g, (match, classnames) => `<h2 class="${classnames.h2 || ''}">${match[1]}</h2>`],
+    [/#{1}\s?([^\n]+)/g, (match, classnames) => `<h1 class="${classnames.h1 || ''}">${match[1]}</h1>`],
 
     // Código en línea
-    [/`([^`]+)`/g, (classnames) => `<code class="${classnames.code || ''}">$1</code>`],
+    [/`([^`]+)`/g, (match, classnames) => `<code class="${classnames.code || ''}" style="background-color:grey;color:black;text-decoration: none;border-radius: 3px;padding:0 2px;">${match[1]}</code>`],
 
-    // Negritas y cursivas
-    [/\*\*\s?([^\n]+)\*\*/g, (classnames) => `<b class="${classnames.b || ''}">$1</b>`],
-    [/\*\s?([^\n]+)\*/g, (classnames) => `<i class="${classnames.i || ''}">$1</i>`],
-    [/__([^_]+)__/g, (classnames) => `<b class="${classnames.b || ''}">$1</b>`],
-    [/_([^_`]+)_/g, (classnames) => `<i class="${classnames.i || ''}">$1</i>`],
+    // Negritas, cursivas y párrafos
+    [/\*\*\s?([^\n]+)\*\*/g, (match, classnames) => `<b class="${classnames.b || ''}">${match[1]}</b>`],
+    [/\*\s?([^\n]+)\*/g, (match, classnames) => `<i class="${classnames.i || ''}">${match[1]}</i>`],
+    [/__([^_]+)__/g, (match, classnames) => `<b class="${classnames.b || ''}">${match[1]}</b>`],
+    [/_([^_`]+)_/g, (match, classnames) => `<i class="${classnames.i || ''}">${match[1]}</i>`],
 
     // Texto suelto -> <p>
-    [/^([^\n]+)$/gm, (classnames) => `<p class="${classnames.p || ''}">$1</p>`],
+    [/^([^\n]+)$/gm, (match, classnames) => `<p class="${classnames.p || ''}">${match[1]}</p>`],
 
     // Enlaces
-    [/\[([^\]]+)\]\(([^)]+)\)/g, (classnames) => `<a class="${classnames.a || ''}" href="$2">$1</a>`],
+    [/\[([^\]]+)\]\(([^)]+)\)/g, (match, classnames) => `<a class="${classnames.a || ''}" href="${match[2]}" style="color:#2A5DB0;text-decoration: none;">${match[1]}</a>`],
 
     // Listas
-    [/^\+\s(.+)/gm, (classnames) => `<ul class="${classnames.ul || ''}"><li class="${classnames.li || ''}">$1</li></ul>`],
-    [/^\*\s(.+)/gm, (classnames) => `<ul class="${classnames.ul || ''}"><li class="${classnames.li || ''}">$1</li></ul>`],
+    [/^\+\s(.+)/gm, (match, classnames) => `<ul class="${classnames.ul || ''}"><li class="${classnames.li || ''}">${match[1]}</li></ul>`],
+    [/^\*\s(.+)/gm, (match, classnames) => `<ul class="${classnames.ul || ''}"><li class="${classnames.li || ''}">${match[1]}</li></ul>`],
 
     // Imágenes
-    [/!\[([^\]]+)\]\(([^)]+)\s"([^")]+)"\)/g, (classnames) => `<img class="${classnames.img || ''}" src="$2" alt="$1" title="$3" />`],
+    [/!\[([^\]]+)\]\(([^)]+)\s"([^")]+)"\)/g, (match, classnames) => `<img class="${classnames.img || ''}" src="${match[2]}" alt="${match[1]}" title="${match[3]}" />`],
 ];
 
 // Define las props para el componente
@@ -70,7 +70,10 @@ const MarkdownParser = ({ markdown, classnames = new HTMLTags() }: MarkdownParse
         if (typeof text !== 'string') return '';
         let html = text;
         rules.forEach(([rule, template]) => {
-            html = html.replace(rule, (_, ...args) => template(classnames));
+            html = html.replace(rule, (...args) => {
+                const match = args.slice(0, -2) as RegExpExecArray;
+                return template(match, classnames);
+            });
         });
         return html;
     };
