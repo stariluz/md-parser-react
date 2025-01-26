@@ -35,14 +35,14 @@ const rules: MarkdownRule[] = [
     // Código en línea
     [/`([^`]+)`/g, (match, classnames) => `<code class="${classnames.code || ''}">${match[1]}</code>`],
 
-    // Negritas, cursivas y párrafos
+    // Negritas y cursivas 
     [/\*\*\s?([^\n]+)\*\*/g, (match, classnames) => `<b class="${classnames.b || ''}">${match[1]}</b>`],
     [/\*\s?([^\n]+)\*/g, (match, classnames) => `<i class="${classnames.i || ''}">${match[1]}</i>`],
     [/__([^_]+)__/g, (match, classnames) => `<b class="${classnames.b || ''}">${match[1]}</b>`],
     [/_([^_`]+)_/g, (match, classnames) => `<i class="${classnames.i || ''}">${match[1]}</i>`],
 
     // Citas
-    [/(^>\s?.+(\n>.*)*)/gm, (match, classnames) => {
+    [/(^>\s?.*(\n>.*)*)/gm, (match, classnames) => {
         const content = match[0]
             .split('\n')
             .map(line => line.replace(/^>\s?/, ''))
