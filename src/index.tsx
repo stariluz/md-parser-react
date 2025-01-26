@@ -41,21 +41,11 @@ const rules: MarkdownRule[] = [
     [/__([^_]+)__/g, (match, classnames) => `<b class="${classnames.b || ''}">${match[1]}</b>`],
     [/_([^_`]+)_/g, (match, classnames) => `<i class="${classnames.i || ''}">${match[1]}</i>`],
 
-    // // Citas
-    // [/(^>\s?.+(\n>.+)*)/gm, (match, classnames) => {
-    //     const content = match[0]
-    //         .split('\n')
-    //         .map(line => line.replace(/^>\s?/, ''))
-    //         .join('<br>');
-    //     return `<blockquote class="${classnames.blockquote || ''}">${content}</blockquote>`;
-    // }],
-
     // Citas
-    [/(^>(?: .+)?(?:\n>|\n$)+)/gm, (match, classnames) => {
+    [/(^>\s?.+(\n>.*)*)/gm, (match, classnames) => {
         const content = match[0]
-            .split(/\n/)
+            .split('\n')
             .map(line => line.replace(/^>\s?/, ''))
-            .filter(line => line.trim() !== '')
             .join('<br>');
         return `<blockquote class="${classnames.blockquote || ''}">${content}</blockquote>`;
     }],
