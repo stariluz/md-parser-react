@@ -17,6 +17,7 @@ class HTMLTags {
     ul?: string = '';
     li?: string = '';
     img?: string = '';
+    blockquote?: string = '';
 }
 // Define el tipo para una regla de Markdown
 type MarkdownRule = [RegExp, (match: RegExpExecArray, classnames: HTMLTags) => string];
@@ -32,7 +33,7 @@ const rules: MarkdownRule[] = [
     [/#{1}\s?([^\n]+)/g, (match, classnames) => `<h1 class="${classnames.h1 || ''}">${match[1]}</h1>`],
 
     // Código en línea
-    [/`([^`]+)`/g, (match, classnames) => `<code class="${classnames.code || ''}" style="background-color:grey;color:black;text-decoration: none;border-radius: 3px;padding:0 2px;">${match[1]}</code>`],
+    [/`([^`]+)`/g, (match, classnames) => `<code class="${classnames.code || ''}">${match[1]}</code>`],
 
     // Negritas, cursivas y párrafos
     [/\*\*\s?([^\n]+)\*\*/g, (match, classnames) => `<b class="${classnames.b || ''}">${match[1]}</b>`],
@@ -44,7 +45,7 @@ const rules: MarkdownRule[] = [
     [/^([^\n]+)$/gm, (match, classnames) => `<p class="${classnames.p || ''}">${match[1]}</p>`],
 
     // Enlaces
-    [/\[([^\]]+)\]\(([^)]+)\)/g, (match, classnames) => `<a class="${classnames.a || ''}" href="${match[2]}" style="color:#2A5DB0;text-decoration: none;">${match[1]}</a>`],
+    [/\[([^\]]+)\]\(([^)]+)\)/g, (match, classnames) => `<a class="${classnames.a || ''}" href="${match[2]}">${match[1]}</a>`],
 
     // Listas
     [/^\+\s(.+)/gm, (match, classnames) => `<ul class="${classnames.ul || ''}"><li class="${classnames.li || ''}">${match[1]}</li></ul>`],
@@ -52,6 +53,16 @@ const rules: MarkdownRule[] = [
 
     // Imágenes
     [/!\[([^\]]+)\]\(([^)]+)\s"([^")]+)"\)/g, (match, classnames) => `<img class="${classnames.img || ''}" src="${match[2]}" alt="${match[1]}" title="${match[3]}" />`],
+
+
+    // Citas
+    [/(^>\s?.+(\n>.+)*)/gm, (match, classnames) => {
+        const content = match[0]
+            .split('\n')
+            .map(line => line.replace(/^>\s?/, ''))
+            .join('<br>');
+        return `<blockquote class="${classnames.blockquote || ''}">${content}</blockquote>`;
+    }],
 ];
 
 // Define las props para el componente
