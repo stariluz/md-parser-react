@@ -18,7 +18,6 @@ const rules = [
     [/\*\s?([^\n]+)\*/g, "<i>$1</i>"],
     [/__([^_]+)__/g, "<b>$1</b>"],
     [/_([^_`]+)_/g, "<i>$1</i>"],
-    [/([^\n]+\n?)/g, "<p>$1</p>"],
     // Enlaces
     [/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color:#2A5DB0;text-decoration: none;">$1</a>'],
     // Resaltados
@@ -28,9 +27,17 @@ const rules = [
     [/^\*\s(.+)/gm, "<ul><li>$1</li></ul>"],
     // Imágenes
     [/!\[([^\]]+)\]\(([^)]+)\s"([^\")]+)"\)/g, '<img src="$2" alt="$1" title="$3" />'],
+    // Parrafos
+    [/([^\n]+\n?)/g, "<p>$1</p>"],
+
 ];
+
 // Componente MarkdownParser
 const MarkdownParser = ({ markdown }) => {
+    if (typeof markdown !== "string") {
+        console.error("Expected markdown to be a string but got:", typeof markdown);
+        return null;
+    }
     const parseMarkdown = (text) => {
         let html = text;
         console.log(html);
@@ -40,8 +47,14 @@ const MarkdownParser = ({ markdown }) => {
         console.log(html);
         return html;
     };
-    return (<div dangerouslySetInnerHTML={{
-            __html: parseMarkdown(markdown || ""),
-        }}></div>);
+
+    const htmlContent = parseMarkdown(markdown || "");
+    return (
+        <div
+            dangerouslySetInnerHTML={{
+                __html: htmlContent,
+            }}
+        />
+    );
 };
 exports.default = MarkdownParser;
