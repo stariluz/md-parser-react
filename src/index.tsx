@@ -1,4 +1,4 @@
-import React from "react";
+import React, { JSX } from "react";
 
 // Define el tipo para una regla de Markdown
 type MarkdownRule = [RegExp, string];
@@ -39,7 +39,7 @@ interface MarkdownParserProps {
     markdown: string;
 }
 // Componente MarkdownParser
-const MarkdownParser: React.FC<MarkdownParserProps> = ({ markdown }: MarkdownParserProps) => {
+const MarkdownParser = ({ markdown }: MarkdownParserProps): JSX.Element => {
     const parseMarkdown = (text: string) => {
         let html = text;
         rules.forEach(([rule, template]) => {
