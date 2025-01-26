@@ -41,6 +41,9 @@ interface MarkdownParserProps {
 // Componente MarkdownParser
 const MarkdownParser = ({ markdown }: MarkdownParserProps): JSX.Element => {
     const parseMarkdown = (text: string) => {
+        // Asegúrate de que siempre sea una cadena válida
+        if (typeof text !== 'string') return '';
+
         let html = text;
         rules.forEach(([rule, template]) => {
             html = html.replace(rule, template);
