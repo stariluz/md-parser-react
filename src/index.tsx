@@ -12,12 +12,19 @@ const rules: MarkdownRule[] = [
     [/#{3}\s?([^\n]+)/g, "<h3>$1</h3>"],
     [/#{2}\s?([^\n]+)/g, "<h2>$1</h2>"],
     [/#{1}\s?([^\n]+)/g, "<h1>$1</h1>"],
+    
+    // Código en línea
+    [/`([^`]+)`/g, '<code style="background-color:grey;color:black;text-decoration: none;border-radius: 3px;padding:0 2px;">$1</code>'],
 
     // Negritas, cursivas y párrafos
     [/\*\*\s?([^\n]+)\*\*/g, "<b>$1</b>"],
     [/\*\s?([^\n]+)\*/g, "<i>$1</i>"],
     [/__([^_]+)__/g, "<b>$1</b>"],
     [/_([^_`]+)_/g, "<i>$1</i>"],
+    
+    // Texto suelto -> <p>
+    [/^([^\n]+)$/gm, "<p>$1</p>"],
+    
 
     // Enlaces
     [/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color:#2A5DB0;text-decoration: none;">$1</a>'],
@@ -31,10 +38,6 @@ const rules: MarkdownRule[] = [
 
     // Imágenes
     [/!\[([^\]]+)\]\(([^)]+)\s"([^\")]+)"\)/g, '<img src="$2" alt="$1" title="$3" />'],
-
-    // Parrafos
-
-    [/([^\n]+\n?)/g, "<p>$1</p>"],
 ];
 
 // Define las props para el componente
