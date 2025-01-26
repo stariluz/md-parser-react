@@ -33,9 +33,11 @@ const rules = [
 const MarkdownParser = ({ markdown }) => {
     const parseMarkdown = (text) => {
         let html = text;
+        console.log(html);
         rules.forEach(([rule, template]) => {
             html = html.replace(rule, template);
         });
+        console.log(html);
         return html;
     };
     return (<div dangerouslySetInnerHTML={{
