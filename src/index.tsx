@@ -12,7 +12,7 @@ const rules: MarkdownRule[] = [
     [/#{3}\s?([^\n]+)/g, "<h3>$1</h3>"],
     [/#{2}\s?([^\n]+)/g, "<h2>$1</h2>"],
     [/#{1}\s?([^\n]+)/g, "<h1>$1</h1>"],
-    
+
     // Código en línea
     [/`([^`]+)`/g, '<code style="background-color:grey;color:black;text-decoration: none;border-radius: 3px;padding:0 2px;">$1</code>'],
 
@@ -21,10 +21,10 @@ const rules: MarkdownRule[] = [
     [/\*\s?([^\n]+)\*/g, "<i>$1</i>"],
     [/__([^_]+)__/g, "<b>$1</b>"],
     [/_([^_`]+)_/g, "<i>$1</i>"],
-    
+
     // Texto suelto -> <p>
     [/^([^\n]+)$/gm, "<p>$1</p>"],
-    
+
 
     // Enlaces
     [/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color:#2A5DB0;text-decoration: none;">$1</a>'],
@@ -49,22 +49,20 @@ const MarkdownParser = ({ markdown }: MarkdownParserProps): JSX.Element | null =
     }
     const parseMarkdown = (text: string) => {
         // Asegúrate de que siempre sea una cadena válida
-        console.log(text);
         if (typeof text !== 'string') return '';
         let html = text;
         rules.forEach(([rule, template]) => {
             html = html.replace(rule, template);
         });
-        console.log(html);
         return html;
     };
 
+    const html = parseMarkdown(markdown || "");
+    console.log(html);
+
+
     return (
-        <div
-            dangerouslySetInnerHTML={{
-                __html: parseMarkdown(markdown || ""),
-            }}
-        ></div>
+        <div dangerouslySetInnerHTML={{ __html: html, }}></div>
     );
 };
 
