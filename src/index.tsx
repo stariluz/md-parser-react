@@ -41,6 +41,15 @@ const rules: MarkdownRule[] = [
     [/__([^_]+)__/g, (match, classnames) => `<b class="${classnames.b || ''}">${match[1]}</b>`],
     [/_([^_`]+)_/g, (match, classnames) => `<i class="${classnames.i || ''}">${match[1]}</i>`],
 
+    // Citas
+    [/(^>\s?.+(\n>.+)*)/gm, (match, classnames) => {
+        const content = match[0]
+            .split('\n')
+            .map(line => line.replace(/^>\s?/, ''))
+            .join('<br>');
+        return `<blockquote class="${classnames.blockquote || ''}">${content}</blockquote>`;
+    }],
+    
     // Texto suelto -> <p>
     [/^([^\n]+)$/gm, (match, classnames) => `<p class="${classnames.p || ''}">${match[1]}</p>`],
 
@@ -53,16 +62,6 @@ const rules: MarkdownRule[] = [
 
     // Imágenes
     [/!\[([^\]]+)\]\(([^)]+)\s"([^")]+)"\)/g, (match, classnames) => `<img class="${classnames.img || ''}" src="${match[2]}" alt="${match[1]}" title="${match[3]}" />`],
-
-
-    // Citas
-    [/(^>\s?.+(\n>.+)*)/gm, (match, classnames) => {
-        const content = match[0]
-            .split('\n')
-            .map(line => line.replace(/^>\s?/, ''))
-            .join('<br>');
-        return `<blockquote class="${classnames.blockquote || ''}">${content}</blockquote>`;
-    }],
 ];
 
 // Define las props para el componente
