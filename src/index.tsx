@@ -18,7 +18,6 @@ const rules: MarkdownRule[] = [
     [/\*\s?([^\n]+)\*/g, "<i>$1</i>"],
     [/__([^_]+)__/g, "<b>$1</b>"],
     [/_([^_`]+)_/g, "<i>$1</i>"],
-    [/([^\n]+\n?)/g, "<p>$1</p>"],
 
     // Enlaces
     [/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" style="color:#2A5DB0;text-decoration: none;">$1</a>'],
@@ -32,6 +31,10 @@ const rules: MarkdownRule[] = [
 
     // Imágenes
     [/!\[([^\]]+)\]\(([^)]+)\s"([^\")]+)"\)/g, '<img src="$2" alt="$1" title="$3" />'],
+
+    // Parrafos
+
+    [/([^\n]+\n?)/g, "<p>$1</p>"],
 ];
 
 // Define las props para el componente
@@ -39,15 +42,20 @@ interface MarkdownParserProps {
     markdown: string;
 }
 // Componente MarkdownParser
-const MarkdownParser = ({ markdown }: MarkdownParserProps): JSX.Element => {
+const MarkdownParser = ({ markdown }: MarkdownParserProps): JSX.Element | null => {
+    if (typeof markdown !== "string") {
+        console.error("Expected markdown to be a string but got:", typeof markdown);
+        return null;
+    }
     const parseMarkdown = (text: string) => {
         // Asegúrate de que siempre sea una cadena válida
+        console.log(text);
         if (typeof text !== 'string') return '';
-
         let html = text;
         rules.forEach(([rule, template]) => {
             html = html.replace(rule, template);
         });
+        console.log(html);
         return html;
     };
 
