@@ -42,7 +42,8 @@ const rules: MarkdownRule[] = [
     [/_([^_`]+)_/g, (match, classnames) => `<i class="${classnames.i || ''}">${match[1]}</i>`],
 
     // Citas
-    [/(^>\s?.*(\n>.*)*)/gm, (match, classnames) => {
+    // [/(^>\s?.*(\n>.*)*)/gm, (match, classnames) => {
+    [/(^>.*(\n>.*|\n>)*?)/gm, (match, classnames) => {
         const content = match[0]
             .split('\n')
             .map(line => line.replace(/^>\s?/, ''))
