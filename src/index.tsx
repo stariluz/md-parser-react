@@ -43,7 +43,7 @@ const rules: MarkdownRule[] = [
 
     // Citas
     // [/(^>\s?.*(\n>.*)*)/gm, (match, classnames) => {
-    [/(^>(?:\s?.*)?(?:\n>.*)*)/gm, (match, classnames) => {
+    [/(^>(?:.*(?:\n|$))*)/gm, (match, classnames) => {
         const content = match[0]
             .split('\n')
             .map(line => line.replace(/^>\s?/, ''))
