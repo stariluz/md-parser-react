@@ -48,6 +48,9 @@ const rules: MarkdownRule[] = [
             .split('\n')
             .map(line => line.replace(/^>\s?/, ''))
             .join('<br>');
+
+        console.log("CONTENT:", content);
+        console.log("MATCH:", match);
         return `<blockquote class="${classnames.blockquote || ''}">${content}</blockquote>`;
     }],
 
